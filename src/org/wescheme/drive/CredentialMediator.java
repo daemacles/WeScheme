@@ -230,7 +230,7 @@ public class CredentialMediator {
             secrets.getWeb().getRedirectUris().get(0),
             scopes)
             .setAccessType("offline")
-            .setApprovalPrompt("force");
+            .setApprovalPrompt("auto");
     // Propagate through the current state parameter, so that when the
     // user gets redirected back to our app, they see the file(s) they
     // were originally supposed to see before we realized we weren't
