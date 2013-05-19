@@ -37,7 +37,6 @@ public class SaveProjectServlet extends BaseServlet{
         String code = req.getParameter("code");
         String pid = req.getParameter("pid");
         String notes = req.getParameter("notes");
-        log.info("pid: " + pid);
         try {
             Session userSession = sm.authenticate(req, resp);
             if( null != userSession ){			
