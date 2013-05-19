@@ -335,9 +335,11 @@ var WeSchemeEditor;
 
 	var afterFileNameChosen = function() {
 	    plt.wescheme.WeSchemeIntentBus.notify("before-save", that);
-	    if (that.pid == false) {
-		onFirstSave();
+	    if (that.pid == false && that.publicId == false) {
+	    	onFirstSave();
 	    } else {
+	    if (that.pid == false)
+	    	that.pid = that.publicId;
 		if (valueNow(that.isPublishedB)) {
 		    that.actions.makeAClone(
                         that.pid,
@@ -466,10 +468,11 @@ var WeSchemeEditor;
 
 	
 	var whenLoadSucceeds = function(aProgram) {
- 	    that.pid = aProgram.getId();
+		// TODO get the id (and publicId, if different) from the returned program if different
+ 	    //that.pid = aProgram.getId();
  	    var publicUrl = getAbsoluteUrl(
  		"/openEditor?publicId=" +
- 		    encodeURIComponent(aProgram.getPublicId()));
+ 		    encodeURIComponent(this.pid));  
  	    that.filenameEntry.attr("value", aProgram.getTitle());
  	    that.defn.setCode(aProgram.getSourceCode());
 	    
@@ -484,9 +487,9 @@ var WeSchemeEditor;
 	    if (onSuccess) { onSuccess(aProgram.getSourceCode()); }
 	};
 
-	var whenLoadFails = function() { 
+	var whenLoadFails = function(message) { 
 	    // FIXME
-	    alert("The load failed.");
+	    alert("The load failed : " + message);
 	    if (onFail) { onFail(); }
 	};
 
@@ -497,6 +500,7 @@ var WeSchemeEditor;
 			 whenLoadSucceeds,
 			 whenLoadFails);
 	} else if (attrs.publicId) {
+		this.pid = attrs.publicId;
 	    plt.wescheme.WeSchemeIntentBus.notify("before-load", this);
 	    that.actions.loadProject(undefined,
 			 attrs.publicId,

@@ -23,6 +23,7 @@ public class DriveProgram {
 	private String owner;
 	private String author;
 	private String fileId;
+	private String id;
 	//// Missing backlink from Wescheme Program object
 	//// FIXME maintain last modified date/time
 	
@@ -43,6 +44,7 @@ public class DriveProgram {
 		Gson gson = new Gson();
 		DriveProgram newProgram = gson.fromJson(content,  DriveProgram.class);
 		newProgram.fileId = file.getId();
+		newProgram.id = newProgram.fileId;
 		return newProgram;
 	}
 	
@@ -106,6 +108,7 @@ public class DriveProgram {
 	}
 	
 	public void setId(String fileId) {
+		this.id = fileId;
 		this.fileId = fileId;
 	}
 	

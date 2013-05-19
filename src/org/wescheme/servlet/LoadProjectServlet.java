@@ -126,6 +126,8 @@ public class LoadProjectServlet extends BaseServlet {
     	GenericUrl url = new GenericUrl(file.getDownloadUrl());
     	HttpResponse response = service.getRequestFactory().buildGetRequest(url)
     			.execute();
+    	// TODO Should read the json representation of the program and recreate a Program object
+    	// That way, the program id (file id) could be populated in the json
     	try {
     		return new Scanner(response.getContent()).useDelimiter("\\A").next();
     	} catch (java.util.NoSuchElementException e) {

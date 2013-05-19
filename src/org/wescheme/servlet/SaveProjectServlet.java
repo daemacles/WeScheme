@@ -9,14 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.wescheme.project.DriveProgram;
-import org.wescheme.project.NameGenerator;
 import org.wescheme.project.Program;
 import org.wescheme.user.Session;
 import org.wescheme.user.SessionManager;
 import org.wescheme.util.CacheHelpers;
 import org.wescheme.util.PMF;
 
-import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.http.ByteArrayContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
@@ -39,6 +37,7 @@ public class SaveProjectServlet extends BaseServlet{
         String code = req.getParameter("code");
         String pid = req.getParameter("pid");
         String notes = req.getParameter("notes");
+        log.info("pid: " + pid);
         try {
             Session userSession = sm.authenticate(req, resp);
             if( null != userSession ){			
@@ -46,7 +45,7 @@ public class SaveProjectServlet extends BaseServlet{
                 if (pid == null) {
                     saveNewProgram(userSession, req, resp, title, code, notes);
                 } else {
-                    saveExistingProgram(pm, userSession, resp, pid, title, code, notes);
+                    saveExistingProgram(userSession, req, resp, pid, title, code, notes);
                 }
             } else {
                 log.warning("User session can't be retrieved; user appears to be logged out.");
@@ -84,16 +83,31 @@ public class SaveProjectServlet extends BaseServlet{
         resp.getWriter().println(file.getId());					
     }
 
-    //// FIXME update this for programs stored in drive
     // Save a program that has an existing pid.
-    private void saveExistingProgram(PersistenceManager pm, Session userSession,
+    private void saveExistingProgram(Session userSession,
+    								 HttpServletRequest req,
                                      HttpServletResponse resp,
                                      String pid, String title, String code, String notes) 
         throws IOException {
         // Preconditions: the program is owned by the user, and has not been published yet.
-        Long id = (Long) Long.parseLong(pid);
-        Program prog = pm.getObjectById(Program.class, id);
-        if (prog.getOwner().equals(userSession.getName()) && !prog.isPublished()) {
+        //Long id = (Long) Long.parseLong(pid);
+        //Program prog = pm.getObjectById(Program.class, id);
+
+        Program prog = new Program(code, userSession.getName());
+        prog.updateTitle(title);
+        Drive service = getDriveService(req, resp);
+        DriveProgram programToSave = new DriveProgram(prog);
+        File file = programToSave.toFile();
+        log.info("(updated) updating program: " + pid);
+        String jsonRepresentation = programToSave.getJsonRepresentation();
+        log.info("program: " + jsonRepresentation);
+        file = service.files().update(pid, file,
+        		ByteArrayContent.fromString(file.getMimeType(), jsonRepresentation))
+        		.setNewRevision(false).execute();
+        log.severe("done saving updated program.");
+        // TODO update notes
+        
+        /*if (prog.getOwner().equals(userSession.getName()) && !prog.isPublished()) {
             if (title != null) { prog.updateTitle(title); }
             if (code != null) { prog.updateSource(code); }
             if (notes != null) { prog.updateNotes(notes); }
@@ -107,6 +121,6 @@ public class SaveProjectServlet extends BaseServlet{
         } else {
             // FIXME: throw an error that the client can recognize!
             throw new RuntimeException("Cannot save program: either not owner, or program published");
-        }
+        }*/
     }
 }
