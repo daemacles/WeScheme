@@ -97,6 +97,7 @@ public class SaveProjectServlet extends BaseServlet{
         Drive service = getDriveService(req, resp);
         DriveProgram programToSave = new DriveProgram(prog);
         File file = programToSave.toFile();
+        
         log.info("(updated) updating program: " + pid);
         String jsonRepresentation = programToSave.getJsonRepresentation();
         log.info("program: " + jsonRepresentation);
