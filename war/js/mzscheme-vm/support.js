@@ -21390,7 +21390,6 @@ var load = function(compilationTop, aState) {
 	var prefix = loader.loadPrefix(compilationTop.prefix);
 	control.processPrefix(aState, prefix);
 
-
 	// Add the code form to the control stack.
 	aState.pushControl(loader.loadCode(aState, compilationTop.code));
     } catch(e) {
@@ -21404,7 +21403,6 @@ var load = function(compilationTop, aState) {
 	}
 	throw e;
     }
-
     return aState;
 
     // TODO: do some processing of the bytecode so that all the

@@ -67,7 +67,7 @@ public class ListProjectsServlet extends BaseServlet {
             w.write(outputString);
             w.close();
         } catch (IOException e) {
-            log.severe("IO expection in ListProjectsServlet!");
+            log.severe("IO expection in ListProjectsServlet!" + e.toString());
             e.printStackTrace();
             resp.sendError(500);
         } catch (UnauthorizedUserException e) {

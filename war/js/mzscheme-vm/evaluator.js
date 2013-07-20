@@ -232,9 +232,14 @@ var Evaluator = (function() {
 
     Evaluator.prototype.executeCompiledProgram = function(compiledBytecode,
 							  onDoneSuccess, onDoneFail) {
+        // JIM THIS IS UNSAFE
+        bytecode = eval( '(' + compiledBytecode.bytecode + ')' );
+        // TODO: BUT THIS DOESN'T WORK
+        //bc = JSON.parse(compiledBytecode.bytecode || "null");
 	this.aState.clearForEval();
 	try {
-	    interpret.load(compiledBytecode, this.aState);
+	    //interpret.load(compiledBytecode, this.aState);
+	    interpret.load(bytecode, this.aState);
 	} catch(e) {
 	    onDoneFail(e);
 	    return;
