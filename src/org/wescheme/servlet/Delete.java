@@ -22,7 +22,7 @@ import org.wescheme.util.PMF;
  *
  */
 
-public class Delete extends HttpServlet{
+public class Delete extends HttpServlet {
 	private static final Logger log = Logger.getLogger(Share.class.getName());
 	private static final long serialVersionUID = -5765142296681571504L;
 
