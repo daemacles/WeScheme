@@ -5,7 +5,9 @@ import java.lang.reflect.Type;
 import org.jdom.Element;
 import org.wescheme.util.XML;
 
+import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
+import com.google.appengine.api.datastore.Text;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -36,6 +38,7 @@ public class DriveProgram {
 		this.isSourcePublic = legacyProgram.getIsSourcePublic();
 		this.isDeleted = legacyProgram.getIsDeleted();
 		this.owner = legacyProgram.getOwner();
+		this.author = legacyProgram.getAuthor();
 		this.author = legacyProgram.getAuthor();
 	}
 	
@@ -111,6 +114,7 @@ public class DriveProgram {
 		this.id = fileId;
 		this.fileId = fileId;
 	}
+
 	
 	public String getJsonRepresentation()
 	{
@@ -127,6 +131,8 @@ public class DriveProgram {
 	    file.setMimeType("application/json");
 	    file.setEditable(true);
 	    file.setFileExtension("wescheme");
+	    file.setParents(null);
+	    
 	    return file;
 	  }
 	  
@@ -154,7 +160,8 @@ public class DriveProgram {
 				JsonElement name = new JsonPrimitive(src.getName());
 				sourceElmt.add("src", code);
 				sourceElmt.add("name", name);
-				return sourceElmt;
+				return sourceElmt;			
+					
 			}
 	    }
 	

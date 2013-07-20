@@ -72,7 +72,13 @@ public class SaveProjectServlet extends BaseServlet{
         log.info("saving via drive service");
         Drive service = getDriveService(req, resp);
         DriveProgram programToSave = new DriveProgram(prog);
+        
+        
+        
         File file = programToSave.toFile();
+        
+        file.setDescription(notes);
+        
         log.info("mimetype: " + file.getMimeType() + "  file json: " + programToSave.getJsonRepresentation());
         file = service.files().insert(file,
                 ByteArrayContent.fromString(file.getMimeType(), programToSave.getJsonRepresentation()))
@@ -91,20 +97,37 @@ public class SaveProjectServlet extends BaseServlet{
         // Preconditions: the program is owned by the user, and has not been published yet.
         //Long id = (Long) Long.parseLong(pid);
         //Program prog = pm.getObjectById(Program.class, id);
+    	
+    	
+    	
 
         Program prog = new Program(code, userSession.getName());
         prog.updateTitle(title);
         Drive service = getDriveService(req, resp);
         DriveProgram programToSave = new DriveProgram(prog);
-        File file = programToSave.toFile();
-        
-        log.info("(updated) updating program: " + pid);
+//        File file = programToSave.toFile();
+//        file.setId(pid);
+//        programToSave.setId(pid);
+//        log.info("(updated) updating program: " + pid);
         String jsonRepresentation = programToSave.getJsonRepresentation();
-        log.info("program: " + jsonRepresentation);
-        file = service.files().update(pid, file,
-        		ByteArrayContent.fromString(file.getMimeType(), jsonRepresentation))
-        		.setNewRevision(false).execute();
+//        log.info("program: " + jsonRepresentation);
+//        log.info("pid: " + pid+" drive_program_id: "+programToSave.getId()+" File_id: "+file.getId());
+//        file = service.files().update(pid, file,
+//        		ByteArrayContent.fromString(file.getMimeType(), jsonRepresentation))
+//        		.setNewRevision(false).execute();
+        
+        
+        File existingFile = service.files().get(pid).execute();
+       
+        
+        log.info("Existing File: "+existingFile+"-----JSON:"+jsonRepresentation);
+        
+        existingFile.setTitle(title);
+        File updatedFile = service.files().update(existingFile.getId(), existingFile, ByteArrayContent.fromString(existingFile.getMimeType(), jsonRepresentation)).execute();
+        
         log.severe("done saving updated program.");
+        
+        resp.getWriter().println(existingFile.getId());
         // TODO update notes
         
         /*if (prog.getOwner().equals(userSession.getName()) && !prog.isPublished()) {

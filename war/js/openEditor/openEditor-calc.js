@@ -22234,16 +22234,34 @@ goog.require("plt.wescheme.WeSchemeIntentBus");
         var doTheSharing = function(isPublic) {
             plt.wescheme.WeSchemeIntentBus.notify("before-share", that);
             
-            that.actions.makeAClone(
-                that.pid, 
-                that.code,
-                function(newPid) { 
-                    that.actions.runTheCompiler(
-                        newPid, 
-                        function() { whenCompilationSucceeds(isPublic, newPid); },
-                        function(err) { whenCompilationFails(isPublic, newPid, err); });
-                },
-                whenCloningFails);
+            $.getScript('https://apis.google.com/js/api.js', function(){
+            	init = function() {
+            		s = new gapi.drive.share.ShareClient('1077667753295.apps.googleusercontent.com');
+            		s.setItemIds([that.pid]);
+            		window.alert(that.pid);
+            		s.showSettingsDialog();
+            	}                
+            	gapi.load('drive-share', init);
+                
+            });
+
+            
+            
+            
+            
+            
+            
+            
+//            that.actions.makeAClone(
+//                that.pid, 
+//                that.code,
+//                function(newPid) { 
+//                    that.actions.runTheCompiler(
+//                        newPid, 
+//                        function() { whenCompilationSucceeds(isPublic, newPid); },
+//                        function(err) { whenCompilationFails(isPublic, newPid, err); });
+//                },
+//                whenCloningFails);
         };
 
         var whenCompilationSucceeds = function(isPublic, newPid) {
@@ -24461,8 +24479,7 @@ var WeSchemeEditor;
 	var title = plt.wescheme.helpers.trimWhitespace(that.filenameEntry.attr("value"));
 	if (title === "") {
 	    var dialogWindow = (jQuery("<div/>"));
-
-            var buttonPressed = false;
+        var buttonPressed = false;
 
 	    var onSaveButton = function() {
 		buttonPressed = true;

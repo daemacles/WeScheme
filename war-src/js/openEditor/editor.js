@@ -386,8 +386,7 @@ var WeSchemeEditor;
 	var title = plt.wescheme.helpers.trimWhitespace(that.filenameEntry.attr("value"));
 	if (title === "") {
 	    var dialogWindow = (jQuery("<div/>"));
-
-            var buttonPressed = false;
+        var buttonPressed = false;
 
 	    var onSaveButton = function() {
 		buttonPressed = true;
