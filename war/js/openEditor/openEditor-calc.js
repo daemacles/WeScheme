@@ -23057,7 +23057,6 @@ goog.provide("plt.wescheme.RoundRobin");
                 }
             }, 10000);
 
-
             // Configures the evaluator to use round-robin compilation between
             // a set of servers.  Compilation will also fall back to other
             // servers under network failure.
@@ -23096,7 +23095,6 @@ goog.provide("plt.wescheme.RoundRobin");
     var tryServerN = function(n, countFailures, 
                               programName, code, 
                               onDone, onDoneError) {
-
         if (n < liveServers.length) {
             liveServers[n].xhr.compileProgram(
                 programName,

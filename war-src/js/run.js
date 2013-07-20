@@ -33,6 +33,7 @@ Runner.prototype.runCompiledCode = function(title, compiledCode, permStringArray
     var onFailRun = function(exn) {
 	that.renderErrorAsDomNode(exn);
     };
+
     this.evaluator.executeCompiledProgram(eval('(' + compiledCode + ')'),
 					  onSuccessRun,
 					  onFailRun);

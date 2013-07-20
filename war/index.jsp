@@ -64,7 +64,7 @@ $(document).ready(function() {
 });
 </script>
 <body>
-<h1>WeScheme</h1>
+<h1>WeScheme Drive 2013</h1>
 <% if (s == null) { %>
     <input id="startCoding" value="Start Coding" type="button">
 <% } else { %>
